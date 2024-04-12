@@ -19,6 +19,8 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 /* import { mainListItems, secondaryListItems } from './listItems'; */
 import Chart from './Chart';
+import { useQuery } from '@tanstack/react-query';
+import { getCripto } from '../service/coinsServices';
 /* import Deposits from './Deposits';
 import Orders from './Orders'; */
 
@@ -76,12 +78,19 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
+
 export default function Dashboard() {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
+  const {data: cryptos} = useQuery({
+    queryKey: ["cryptos"],
+    queryFn:  getCripto,
+})
+
+console.log(cryptos)
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: 'flex' }}>
