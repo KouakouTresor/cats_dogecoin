@@ -1,8 +1,16 @@
-import * as React from 'react';
-import {AppBar, Box, Toolbar, Typography, Button, IconButton} from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
+import * as React from "react";
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  Typography,
+  IconButton,
+  Button,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import { Link } from "react-router-dom";
 
- function HeaderApp() {
+function HeaderApp() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -16,14 +24,24 @@ import MenuIcon from '@mui/icons-material/Menu';
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 2 }}>
-            News
+          <Typography variant="h6" component="div">
+            <Link
+              to="/"
+              style={{ color: "inherit", textDecoration: "none" }}
+            >
+              <Button color="inherit">Dashboard</Button>
+            </Link>
           </Typography>
-          <Button color="inherit">Login</Button>
+          <Typography><Link
+              to="/websites"
+              style={{ color: "inherit", textDecoration: "none" }}
+            >
+              <Button color="inherit">Websites</Button>
+            </Link></Typography>
         </Toolbar>
-      </AppBar> 
+      </AppBar>
     </Box>
   );
 }
 
-export default HeaderApp
+export default HeaderApp;

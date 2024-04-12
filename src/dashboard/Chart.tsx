@@ -1,36 +1,34 @@
-import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
-import { LineChart, axisClasses } from '@mui/x-charts';
-import { ChartsTextStyle } from '@mui/x-charts/ChartsText';
-import Title from '../components/Title';
-
-// Generate Sales Data
-function createData(
-  time: string,
-  amount?: number,
-): { time: string; amount: number | null } {
-  return { time, amount: amount ?? null };
-}
-
-const data = [
-  createData('00:00', 0),
-  createData('03:00', 300),
-  createData('06:00', 600),
-  createData('09:00', 800),
-  createData('12:00', 1500),
-  createData('15:00', 2000),
-  createData('18:00', 2400),
-  createData('21:00', 2400),
-  createData('24:00'),
-];
+import * as React from "react";
+import { useTheme } from "@mui/material/styles";
+import { LineChart, axisClasses } from "@mui/x-charts";
+import { ChartsTextStyle } from "@mui/x-charts/ChartsText";
+import Title from "../components/Title";
+import { getCripto } from "../service/cryptoServices";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Chart() {
   const theme = useTheme();
 
+  function createData(
+    time: string,
+    changePercent24Hr?: number
+  ): { time: string; changePercent24Hr: number | null } {
+    return { time, changePercent24Hr: changePercent24Hr ?? null };
+  }
+
+  const { data: cryptos } = useQuery({
+    queryKey: ["cryptos"],
+    queryFn: getCripto,
+  });
+
+  const data = cryptos.map((crypto: any) =>
+    createData(crypto.name, parseFloat(crypto.changePercent24Hr))
+  );
+
   return (
     <React.Fragment>
-      <Title>Today</Title>
-      <div style={{ width: '100%', flexGrow: 1, overflow: 'hidden' }}>
+      <Title>Dogecoin</Title>
+      <div style={{ width: "100%", flexGrow: 1, overflow: "hidden" }}>
         <LineChart
           dataset={data}
           margin={{
@@ -41,15 +39,15 @@ export default function Chart() {
           }}
           xAxis={[
             {
-              scaleType: 'point',
-              dataKey: 'time',
+              scaleType: "point",
+              dataKey: "time",
               tickNumber: 2,
               tickLabelStyle: theme.typography.body2 as ChartsTextStyle,
             },
           ]}
           yAxis={[
             {
-              label: 'Sales ($)',
+              label: "Change Percentage (%)",
               labelStyle: {
                 ...(theme.typography.body1 as ChartsTextStyle),
                 fill: theme.palette.text.primary,
@@ -61,16 +59,20 @@ export default function Chart() {
           ]}
           series={[
             {
-              dataKey: 'amount',
+              dataKey: "changePercent24Hr",
               showMark: false,
               color: theme.palette.primary.light,
             },
           ]}
           sx={{
-            [`.${axisClasses.root} line`]: { stroke: theme.palette.text.secondary },
-            [`.${axisClasses.root} text`]: { fill: theme.palette.text.secondary },
+            [`.${axisClasses.root} line`]: {
+              stroke: theme.palette.text.secondary,
+            },
+            [`.${axisClasses.root} text`]: {
+              fill: theme.palette.text.secondary,
+            },
             [`& .${axisClasses.left} .${axisClasses.label}`]: {
-              transform: 'translateX(-25px)',
+              transform: "translateX(-25px)",
             },
           }}
         />
