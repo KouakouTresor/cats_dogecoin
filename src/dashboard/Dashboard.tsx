@@ -8,7 +8,7 @@ import Paper from "@mui/material/Paper";
 import Chart from "./Chart";
 import { useQuery } from "@tanstack/react-query";
 import { getCripto } from "../service/cryptoServices";
-import Deposits from "./Deposits";
+import Deposits from "./Currency";
 
 
 const defaultTheme = createTheme();

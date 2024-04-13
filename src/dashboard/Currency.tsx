@@ -8,7 +8,7 @@ export type ChartProps = {
   priceUsd: string | undefined;
 };
 
-export default function Deposits({ name, priceUsd }: ChartProps) {
+export default function Currency({ name, priceUsd }: ChartProps) {
 
   const formatPrice = (price: string | undefined): string => {
     if (!price || isNaN(parseFloat(price))) {
