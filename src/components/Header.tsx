@@ -38,6 +38,14 @@ function HeaderApp() {
             >
               <Button color="inherit">Websites</Button>
             </Link></Typography>
+            <Typography variant="h6" component="div">
+            <Link
+              to="/tickets"
+              style={{ color: "inherit", textDecoration: "none" }}
+            >
+              <Button color="inherit">Tickets</Button>
+            </Link>
+          </Typography>
         </Toolbar>
       </AppBar>
     </Box>

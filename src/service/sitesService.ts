@@ -1,15 +1,10 @@
-const apiKey = process.env.API_KEY
 
-export const getWebSites = async () => {
+export const getRankings = async () => {
     try {
-        const response = await fetch("https://api.swapzone.io/v1/exchange/currencies", {
+        const response = await fetch("https://api.coingecko.com/api/v3/exchanges?per_page=10&page=1", {
           method: "GET",
-          headers:{
-            'x-api-key': 'TIzbKYYMG',
-          } 
         });
         const data = await response.json();
-        console.log(data)
         return data;
       } catch (error) {
         throw error;

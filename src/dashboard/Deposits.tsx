@@ -1,27 +1,38 @@
-import * as React from 'react';
-import Link from '@mui/material/Link';
-import Typography from '@mui/material/Typography';
-import Title from '../components/Title';
+import * as React from "react";
+import Link from "@mui/material/Link";
+import Typography from "@mui/material/Typography";
+import Title from "../components/Title";
 
-function preventDefault(event: React.MouseEvent) {
-  event.preventDefault();
-}
+export type ChartProps = {
+  name: string | undefined;
+  priceUsd: string | undefined;
+};
 
-export default function Deposits() {
+export default function Deposits({ name, priceUsd }: ChartProps) {
+
+  const formatPrice = (price: string | undefined): string => {
+    if (!price || isNaN(parseFloat(price))) {
+      return "N/A";
+    }
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(parseFloat(price));
+  };
+
+  const dateOfToday = new Date().toLocaleString();
+  const price = formatPrice(priceUsd);
+
+
   return (
     <React.Fragment>
-      <Title>Recent Deposits</Title>
+      <Title>{name}</Title>
       <Typography component="p" variant="h4">
-        $3,024.00
+        {price}
       </Typography>
       <Typography color="text.secondary" sx={{ flex: 1 }}>
-        on 15 March, 2019
+        {dateOfToday}
       </Typography>
-      <div>
-        <Link color="primary" href="#" onClick={preventDefault}>
-          View balance
-        </Link>
-      </div>
     </React.Fragment>
   );
 }

@@ -1,81 +1,60 @@
 import * as React from "react";
-import { useTheme } from "@mui/material/styles";
-import { LineChart, axisClasses } from "@mui/x-charts";
-import { ChartsTextStyle } from "@mui/x-charts/ChartsText";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+
 import Title from "../components/Title";
-import { getCripto } from "../service/cryptoServices";
 import { useQuery } from "@tanstack/react-query";
+import { CryptoData, getDogecoinHistory } from "../service/cryptoServices";
 
 export default function Chart() {
-  const theme = useTheme();
-
-  function createData(
-    time: string,
-    changePercent24Hr?: number
-  ): { time: string; changePercent24Hr: number | null } {
-    return { time, changePercent24Hr: changePercent24Hr ?? null };
-  }
-
-  const { data: cryptos } = useQuery({
-    queryKey: ["cryptos"],
-    queryFn: getCripto,
+  const { data: dogecoin } = useQuery({
+    queryKey: ["dogecoin"],
+    queryFn: getDogecoinHistory,
+    gcTime: 0
   });
 
-  const data = cryptos.map((crypto: any) =>
-    createData(crypto.name, parseFloat(crypto.changePercent24Hr))
-  );
-
+   const formattedData = dogecoin?.map((item: CryptoData) => ({
+    date: new Date(item.date).toLocaleDateString("en-US"),
+    price: parseFloat(item.priceUsd),
+  }));
+  
   return (
     <React.Fragment>
       <Title>Dogecoin</Title>
-      <div style={{ width: "100%", flexGrow: 1, overflow: "hidden" }}>
-        <LineChart
-          dataset={data}
-          margin={{
-            top: 16,
-            right: 20,
-            left: 70,
-            bottom: 30,
-          }}
-          xAxis={[
-            {
-              scaleType: "point",
-              dataKey: "time",
-              tickNumber: 2,
-              tickLabelStyle: theme.typography.body2 as ChartsTextStyle,
-            },
-          ]}
-          yAxis={[
-            {
-              label: "Change Percentage (%)",
-              labelStyle: {
-                ...(theme.typography.body1 as ChartsTextStyle),
-                fill: theme.palette.text.primary,
-              },
-              tickLabelStyle: theme.typography.body2 as ChartsTextStyle,
-              max: 2500,
-              tickNumber: 3,
-            },
-          ]}
-          series={[
-            {
-              dataKey: "changePercent24Hr",
-              showMark: false,
-              color: theme.palette.primary.light,
-            },
-          ]}
-          sx={{
-            [`.${axisClasses.root} line`]: {
-              stroke: theme.palette.text.secondary,
-            },
-            [`.${axisClasses.root} text`]: {
-              fill: theme.palette.text.secondary,
-            },
-            [`& .${axisClasses.left} .${axisClasses.label}`]: {
-              transform: "translateX(-25px)",
-            },
-          }}
-        />
+      <div
+        style={{
+          width: "100%",
+          height: "300px",
+          flexGrow: 1,
+          overflow: "hidden",
+        }}
+      >
+        <ResponsiveContainer>
+           <LineChart
+            data={formattedData}
+            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line
+              type="monotone"
+              dataKey="price"
+              stroke="#1976d2"
+              activeDot={{ r: 8 }}
+            />
+          </LineChart>
+        </ResponsiveContainer>   
       </div>
     </React.Fragment>
   );
